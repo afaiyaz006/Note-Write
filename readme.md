@@ -14,7 +14,7 @@ Run
 ```
 npm run dev
 ```
-Create a file named .env.local.Create a <a href="https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps#building-a-github-app">github app</a> and add  github ID and github secrets.
+Create a file named ```.env.local.``` Create a <a href="https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps#building-a-github-app">github app</a> and add  github ID and github secrets.
 # Tools used
 1. Database : Sqlite
 2. ORM : Drizzle ORM
