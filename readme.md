@@ -3,6 +3,14 @@ Simple note writing app.Demonstrating CRUD operations.
 
 # Usage
 ```
+git clone https://github.com/afaiyaz006/Note-Write
+```
+Install dependencies
+```
+npm install
+```
+Run
+```
 npm run dev
 ```
 
