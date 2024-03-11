@@ -50,7 +50,10 @@ export default function Navbar() {
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          ></ul>
+          >
+               <NoteButton session={session}></NoteButton>
+
+          </ul>
         </div>
         <a className="btn btn-ghost text-xl">Note Write</a>
       </div>
