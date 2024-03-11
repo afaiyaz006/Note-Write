@@ -26,9 +26,9 @@ Create a file named ```.env.local``` Create a <a href="https://docs.github.com/e
 NO
 # Screenshots
 
-[]('screenshots/homepage.png')
-[]('screenshots/form.png')
-[]('screenshots/form.png')
+![](screenshots/homepage.png)
+![](/screenshots/form.png)
+![](screenshots/notes.png)
 
 
 
