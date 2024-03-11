@@ -22,7 +22,7 @@ Create a file named ```.env.local``` Create a <a href="https://docs.github.com/e
 2. ORM : Drizzle ORM
 3. Frontend + Backend : NextJS (using latest App based routing) 
 4. CSS : Tailwind CSS+ Daisy UI
-### Is it secure?
+# Is this app secure?
 NO
 # Screenshots
 
