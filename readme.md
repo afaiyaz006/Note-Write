@@ -25,7 +25,7 @@ GITHUB_SECRET="SECRET"
 # Libraries used
 1. Database : Sqlite
 2. ORM : Drizzle ORM
-3. Authentication : next-auth (Added github as login provider so login with github only)
+3. Authentication : next-auth (Added only github as login provider so login with github only.)
 4. Frontend + Backend : NextJS (using latest App based routing) 
 5. CSS : Tailwind CSS+ Daisy UI
 # Is this app secure?
