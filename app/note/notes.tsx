@@ -23,7 +23,7 @@ export default  function Note(note) {
       <div className="card w-96 bg-base-100 shadow-xl p-0.5">
         <div className="card-body items-center text-center">
           <h2 className="card-title">{title}</h2>
-          <p>{content}</p>
+          
           <div className="card-actions">
             <button className="btn btn-primary btn-sm" onClick={() => { router.replace(`/note/${note_id}`)}}>
               View
