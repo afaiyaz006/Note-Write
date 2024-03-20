@@ -15,7 +15,7 @@ const breeSerif = Bree_Serif({
 
 export const metadata: Metadata = {
   title: "Note-Write App",
-  description: "A simple notepad app.",
+  description: "A simple note app.",
 };
 
 export default async function RootLayout({
