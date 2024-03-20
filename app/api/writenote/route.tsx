@@ -5,19 +5,12 @@ import { text,integer,sqliteTable } from 'drizzle-orm/sqlite-core';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { like, sql } from 'drizzle-orm';
-
+import {db,notesTable} from '../note/DatabaseComponent'
 
 export async function POST(req,res) {
     const session = await getServerSession(authOptions)
 
-    const sqlite = new Database('sqlite.db'); 
-    const db: BetterSQLite3Database = drizzle(sqlite);
-    const notesTable=sqliteTable("notes",{
-      note_id:text('note_id'),
-      title:text('title'),
-      content:text('content'),
-      email:text('email')
-    })
+  
     if (req.method=="POST" && session){
         const formData=await req.formData()
         const title=formData.get('title')
