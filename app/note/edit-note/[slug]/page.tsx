@@ -7,12 +7,13 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [newNoteContent,setNewNoteContent]=useState('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  const [clicked,setClicked]=useState<boolean>(false)
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
     setError(null) // Clear previous errors when a new request starts
-
+    setClicked(true)
     try {
       const formData = new FormData(event.currentTarget)
       //console.log(formData)
@@ -30,9 +31,10 @@ export default function Page({ params }: { params: { slug: string } }) {
     } catch (error) {
       // Capture the error message to display to the user
       setError(error.message)
-      console.error(error)
+      //console.error(error)
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
+ 
     }
   }
 
@@ -64,13 +66,41 @@ export default function Page({ params }: { params: { slug: string } }) {
             setNewNoteTitle(data[0].title)
             setNewNoteContent(data[0].content)
             setData(data);
+            
           }); // Update the state with the fetched data
       }, [note_id_slug]);
-
+    
+    var alertmessage=()=>{return (
+      <div></div>
+    )}
+    
+    if (isLoading){
+      alertmessage=()=>{
+        return (
+        <div role="alert" className="alert"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span>Updating.....</span>
+        </div>
+        )
+      }
+    }
+    else if(!isLoading && clicked){
+      alertmessage=()=>{
+        
+        return(
+          <div role="alert" className="alert"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>Updated!</span>
+          </div>
+        )
+      }
+    }
+    
+    
+    
     //const note_title=data.map((note)=>{ return note.title})
     //const note_content=data.map((note)=>{ return note.content})
     return (
       <>
+      {alertmessage()}
       <form onSubmit={onSubmit} className="border border-gray-200 rounded-lg shadow">
         <label className="flex flex-row content-center ml-20 mr-20 my-3">
           Title
