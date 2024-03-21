@@ -17,12 +17,12 @@ export async function GET(req, { params }) {
   const session = await getServerSession(authOptions);
   if (session) {
     if (parseInt(note_id) >= 0) {
-      const notes = db
+      const notes =await db
         .select()
         .from(notesTable)
         .where(like(notesTable.note_id, note_id))
-        .all();
-
+        
+      //console.log(notes)
       // Return the items as a JSON response with status 200
       return new Response(JSON.stringify(notes), {
         headers: { "Content-Type": "application/json" },
