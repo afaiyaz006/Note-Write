@@ -1,7 +1,5 @@
 "use server";
-import { drizzle, BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
-import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
+
 import { getServerSession } from "next-auth";
 import { db, notesTable } from "../DatabaseComponent";
 import { like } from "drizzle-orm";

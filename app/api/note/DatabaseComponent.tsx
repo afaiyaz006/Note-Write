@@ -9,9 +9,9 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
-// Use this object to send drizzle queries to your DB
+// Use this object to send drizzle queries to  DB
 const db = drizzle(sql);
-// Create a pgTable that maps to a table in your DB
+// Create a pgTable that maps to a table in  DB
 const notesTable = pgTable(
   "notes", {
     note_id: text('note_id'),
