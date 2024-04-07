@@ -1,10 +1,13 @@
 'use client'
+import dynamic from "next/dynamic";
 import { FormEvent, useEffect, useState } from "react";
-
+const CustomEditor = dynamic(()=>{
+  return import( '../../../components/CKEditorComponent');
+}, { ssr: false} );
 export default function Page({ params }: { params: { slug: string } }) {
   const note_id_slug = params["slug"];
   const [newNoteTitle,setNewNoteTitle]=useState('')
-  const [newNoteContent,setNewNoteContent]=useState('')
+  const [content,setContent]=useState('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [clicked,setClicked]=useState<boolean>(false)
@@ -17,6 +20,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     try {
       const formData = new FormData(event.currentTarget)
       //console.log(formData)
+      formData.append("content",content) // security risk
       const response = await fetch('/api/note/edit/'+note_id_slug, {
         method: 'POST',
         body: formData,
@@ -46,7 +50,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     setNewNoteTitle(event.target.value);
   };
   const handleContentChange=(event)=>{
-    setNewNoteContent(event.target.value);
+    setContent(event.target.value);
   }
 
 
@@ -64,7 +68,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           }) // Parse the response data as JSON
           .then((data) => {
             setNewNoteTitle(data[0].title)
-            setNewNoteContent(data[0].content)
+            setContent(data[0].content)
             setData(data);
             
           }); // Update the state with the fetched data
@@ -119,18 +123,15 @@ export default function Page({ params }: { params: { slug: string } }) {
         <label className="flex flex-row content-center ml-20 mr-20 my-3">
           Body
         </label>
-        <div className="flex flex-row w-mid content-center ml-20 mr-20 my-3">
-          <div className="flex-initial w-full">
-            <textarea
-              className=" textarea-md w-full h-80 rounded-md textarea-bordered border-2 border-transparent-10 dark:placeholder-gray-400"
-              placeholder="Write note"
-              id="content"
-              name="content"
-              value={newNoteContent}
-              onChange={handleContentChange}
-            ></textarea>
+       
+          <div className="grid-col-1 ml-20 my-3">
+            
+            <CustomEditor
+              initialData={content}
+              setContent={setContent}
+              className="p-3"
+            />
           </div>
-        </div>
         
         <div className="flex flex-row w-full place-content-center my-3">
           <button className="btn glass" >Edit Note</button>

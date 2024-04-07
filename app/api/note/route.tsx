@@ -3,7 +3,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { eq } from 'drizzle-orm';
-import {db,notesTable} from './DatabaseComponent'
+import {db,notesTable} from '../../components/DatabaseComponent'
 
 // Let's initialize it as null initially, and we will assign the actual database instance later.
 

@@ -1,7 +1,7 @@
 "use server";
 import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
 import { getServerSession } from "next-auth";
-import { db, notesTable } from "../../DatabaseComponent";
+import { db, notesTable } from "../../../../components/DatabaseComponent";
 //import { eq } from 'drizzle-orm/sql';
 import { eq } from "drizzle-orm";
 import { authOptions } from "../../../auth/[...nextauth]/route";

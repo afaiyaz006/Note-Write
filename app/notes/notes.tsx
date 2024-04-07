@@ -33,10 +33,10 @@ export default  function Note(note) {
           <h2 className="card-title">{title}</h2>
           
           <div className="card-actions">
-            <button className="btn btn-primary btn-sm" onClick={() => { router.replace(`/note/${note_id}`)}}>
+            <button className="btn btn-primary btn-sm" onClick={() => { router.replace(`/notes/${note_id}`)}}>
               View
             </button>
-            <button className="btn btn-primary btn-sm" onClick={()=>{router.replace(`note/edit-note/${note_id}`)}}>
+            <button className="btn btn-primary btn-sm" onClick={()=>{router.replace(`notes/edit-note/${note_id}`)}}>
               Edit
             </button>
             <button className="btn btn-primary btn-sm" onClick={handleDelete}>

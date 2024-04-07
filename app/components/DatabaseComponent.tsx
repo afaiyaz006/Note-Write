@@ -11,7 +11,7 @@ import {
 
 // Use this object to send drizzle queries to  DB
 const db = drizzle(sql);
-// Create a pgTable that maps to a table in  DB
+//pgTable that maps to the notes table  in  DB
 const notesTable = pgTable(
   "notes", {
     note_id: text('note_id'),

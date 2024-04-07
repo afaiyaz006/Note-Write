@@ -3,7 +3,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { like, sql } from 'drizzle-orm';
-import {db,notesTable} from '../note/DatabaseComponent'
+import {db,notesTable} from '../../components/DatabaseComponent'
 
 export async function POST(req,res) {
     const session = await getServerSession(authOptions)
@@ -13,6 +13,7 @@ export async function POST(req,res) {
         const formData=await req.formData()
         const title=formData.get('title')
         const content=formData.get('content')
+       
         const totalUserCount = await db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(notesTable);
         //console.log(totalUserCount)
         const respond=await db.insert(notesTable).values({ 

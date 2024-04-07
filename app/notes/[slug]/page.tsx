@@ -37,8 +37,15 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <>
                 <div key={index}>
                 <h2 className="card-title">{value.title}</h2>
-                <p>{value.content}</p>
+                <article className="prose lg:prose-xl">
+                  <div dangerouslySetInnerHTML={{ __html:value.content}}></div>
+                </article>
                 </div>
+                <div className="flex flex-row mr-20 ml-20 place-content-center">
+                  <button className="btn">Talk with your note!</button>
+                </div>
+                
+
                 </>
             );
           }):<h1>Nothing here but crickets</h1>}

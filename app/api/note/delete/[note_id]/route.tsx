@@ -1,7 +1,7 @@
 "use server";
 import { getServerSession } from "next-auth";
 import { eq } from "drizzle-orm";
-import { db, notesTable } from "../../DatabaseComponent";
+import { db, notesTable } from "../../../../components/DatabaseComponent";
 import { authOptions } from "../../../auth/[...nextauth]/route";
 
 export async function GET(req, { params }) {

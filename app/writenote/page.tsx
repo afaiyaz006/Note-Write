@@ -1,24 +1,39 @@
 'use client'
 import { useSession } from "next-auth/react";
-import WriteNote from "./writenote";
 import { FormEvent, useState } from "react";
+import { redirect } from "next/navigation";
+import dynamic from "next/dynamic";
+
+// dynamic imports must be outside export functions
+// other wise for each refresh the Custom editor component will rerender
+
+const CustomEditor = dynamic(()=>{
+  return import( '../components/CKEditorComponent' );
+}, { ssr: false} );
 export default function Page() {
+ 
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [isPublished,setIsPublished]=useState<boolean>(false)
-
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  const [content,setContent]=useState('Write anything')
+  
+  ///console.log(CustomEditor['data'])
+  console.log(content)
+  async function onSubmit(event) {
     event.preventDefault()
     setIsLoading(true)
     setError(null) // Clear previous errors when a new request starts
-
+    
     try {
       const formData = new FormData(event.currentTarget)
-      //console.log(formData)
+     
+      formData.append('content',content) //security risk will fix it later
+    
+      //console.log(formData['content'])
       const response = await fetch('/api/writenote', {
         method: 'POST',
-        body: formData,
+        body: formData
       })
 
       if (!response.ok) {
@@ -29,6 +44,7 @@ export default function Page() {
       }
     
       // ...
+      
     } catch (error) {
       // Capture the error message to display to the user
       setError(error.message)
@@ -57,11 +73,37 @@ export default function Page() {
       <div>{publishAlert()}</div>
       <div>{isLoading ? 'Loading...' : ''}</div>
       <form onSubmit={onSubmit} className="border border-gray-200 rounded-lg shadow">
-        
-        <WriteNote></WriteNote>
-        
+      <label className="flex flex-row content-center ml-20 mr-20 my-3">Title</label>
+      <div className="flex flex-row content-center ml-20 mr-20">
+        <input
+          type="text"
+          placeholder="Title here"
+          className="input input-bordered w-full max-w-xs"
+          id="title"
+          name="title"
+        />
+      </div>
+      
+      <label className="flex flex-row content-center ml-20 mr-20 my-3">Body</label>
+      <div className="grid-cols-1 ml-20 my-3">
+      
+      <CustomEditor
+      initialData={content}
+      setContent={setContent}
+      className="p-3"
+      />
+      </div>
+      <div className="flex flex-row w-full place-content-center px-3 my-3">
+        <button className="btn glass">Publish Note</button>
+      </div>  
       </form>
+      <style>{`.ck-editor__editable_inline { min-height: 200px;} .ckeContainer {margin:3px;}`}</style>
+      
       </>
     );
   }
+  else{
+    redirect("/")
+  }
 }
+

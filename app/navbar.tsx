@@ -12,7 +12,7 @@ function NoteButton({session}) {
       </li>
 
       <li>
-        <Link href="/note" className="button">
+        <Link href="/notes" className="button">
           notes
         </Link>
       </li>

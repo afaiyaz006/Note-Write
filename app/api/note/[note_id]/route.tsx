@@ -1,7 +1,7 @@
 "use server";
 
 import { getServerSession } from "next-auth";
-import { db, notesTable } from "../DatabaseComponent";
+import { db, notesTable } from "../../../components/DatabaseComponent";
 import { like } from "drizzle-orm";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
