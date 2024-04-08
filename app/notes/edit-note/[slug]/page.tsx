@@ -1,6 +1,8 @@
 'use client'
 import dynamic from "next/dynamic";
 import { FormEvent, useEffect, useState } from "react";
+import DOMPurify from 'dompurify';
+
 const CustomEditor = dynamic(()=>{
   return import( '../../../components/CKEditorComponent');
 }, { ssr: false} );
@@ -20,7 +22,9 @@ export default function Page({ params }: { params: { slug: string } }) {
     try {
       const formData = new FormData(event.currentTarget)
       //console.log(formData)
-      formData.append("content",content) // security risk
+      const santizedContent = DOMPurify.sanitize(content); //xss protection hope it works
+
+      formData.append("content",santizedContent) 
       const response = await fetch('/api/note/edit/'+note_id_slug, {
         method: 'POST',
         body: formData,

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { FormEvent, useState } from "react";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
-
+import DOMPurify from 'dompurify';
 // dynamic imports must be outside export functions
 // other wise for each refresh the Custom editor component will rerender
 
@@ -16,10 +16,10 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [isPublished,setIsPublished]=useState<boolean>(false)
-  const [content,setContent]=useState('Write anything')
+  const [content,setContent]=useState('')
   
   ///console.log(CustomEditor['data'])
-  console.log(content)
+  //console.log(content)
   async function onSubmit(event) {
     event.preventDefault()
     setIsLoading(true)
@@ -27,8 +27,9 @@ export default function Page() {
     
     try {
       const formData = new FormData(event.currentTarget)
-     
-      formData.append('content',content) //security risk will fix it later
+      const santizedContent = DOMPurify.sanitize(content); //xss protection
+      ///console.log(santizedContent)
+      formData.append('content',santizedContent) 
     
       //console.log(formData['content'])
       const response = await fetch('/api/writenote', {
@@ -91,6 +92,7 @@ export default function Page() {
       initialData={content}
       setContent={setContent}
       className="p-3"
+     
       />
       </div>
       <div className="flex flex-row w-full place-content-center px-3 my-3">
