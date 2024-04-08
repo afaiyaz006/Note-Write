@@ -1,5 +1,9 @@
 # Note writer
-Simple note writing app.Demonstrating CRUD operations.
+Rich text Note writing app.
+# Features
+* Create and manage notes.
+* Talk with your note using AI.
+
 
 # Run locally
 Clone the repo
