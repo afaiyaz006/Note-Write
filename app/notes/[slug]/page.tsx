@@ -1,10 +1,14 @@
 "use client";
 import { integer } from "drizzle-orm/pg-core";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const router = useRouter();
+  const note_id = String(params["slug"]);
   //console.log(parseInt(params['slug']))
   useEffect(() => {
     fetch("/api/note/" + params["slug"], {
@@ -26,29 +30,59 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <div className="card w-full bg-base-100 shadow-2xl">
-      {isLoading? <div role="alert" className="alert alert-info">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <span>Loading...</span>
-          </div>:<div></div>}
+        {isLoading ? (
+          <div role="alert" className="alert alert-info">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-current shrink-0 w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>Loading...</span>
+          </div>
+        ) : (
+          <div></div>
+        )}
         <div className="card-body">
-         
-          {data.length>0 ? data.map((value, index) => {
-            return (
+          {data.length > 0 ? (
+            data.map((value, index) => {
+              return (
                 <>
-                <div key={index}>
-                <h2 className="card-title">{value.title}</h2>
-                <article className="prose lg:prose-xl">
-                  <div dangerouslySetInnerHTML={{ __html:value.content}}></div>
-                </article>
-                </div>
-                <div className="flex flex-row mr-20 ml-20 place-content-center">
-                  <button className="btn">Talk with your note!</button>
-                </div>
-                
-
+                  <div key={index}>
+                    <h2 className="card-title">{value.title}</h2>
+                    <article className="prose lg:prose-xl">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: value.content }}
+                      ></div>
+                    </article>
+                  </div>
+                  <div className="flex flex-row mr-20 ml-20 place-content-center">
+                    <button className="btn">
+                    <Link
+                    href={{
+                      pathname:"/notes/" + note_id + "/talk-with-note",
+                      query: {
+                        note: value.content,
+                      },
+                    }}
+                    >Talk with note!</Link>
+                    
+                    </button>
+                  </div>
+                  
                 </>
-            );
-          }):<h1>Nothing here but crickets</h1>}
+              );
+            })
+          ) : (
+            <h1>Nothing here but crickets</h1>
+          )}
         </div>
       </div>
     </>
