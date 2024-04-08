@@ -1,8 +1,8 @@
 # Note writer
 Rich text Note writing app.
 #Features
--Create and manage notes
--added AI based assitance to talk with your note
+*Create and manage notes
+*added AI based assitance to talk with your note
 
 
 # Run locally
