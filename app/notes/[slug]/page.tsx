@@ -3,12 +3,12 @@ import { integer } from "drizzle-orm/pg-core";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import Cookies from 'js-cookie';
 export default function Page({ params }: { params: { slug: string } }) {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  const router = useRouter();
   const note_id = String(params["slug"]);
+
   //console.log(parseInt(params['slug']))
   useEffect(() => {
     fetch("/api/note/" + params["slug"], {
@@ -23,10 +23,10 @@ export default function Page({ params }: { params: { slug: string } }) {
       }) // Parse the response data as JSON
       .then((data) => {
         setData(data);
+        
         setLoading(false);
       }); // Update the state with the fetched data
   }, [params]);
-
   return (
     <>
       <div className="card w-full bg-base-100 shadow-2xl">
@@ -58,23 +58,22 @@ export default function Page({ params }: { params: { slug: string } }) {
                   <div key={index}>
                     <h2 className="card-title">{value.title}</h2>
                     <article className="prose lg:prose-xl">
+                      
                       <div
                         dangerouslySetInnerHTML={{ __html: value.content }}
                       ></div>
                     </article>
                   </div>
                   <div className="flex flex-row mr-20 ml-20 place-content-center">
-                    <button className="btn">
-                    <Link
-                    href={{
-                      pathname:"/notes/" + note_id + "/talk-with-note",
-                      query: {
-                        note: value.content,
-                      },
-                    }}
-                    >Talk with note!</Link>
                     
-                    </button>
+                    <Link
+                    href={
+                      {
+                        pathname:"/notes/talk-with-note",
+                      }
+                    }
+                    prefetch={false} onClick={()=>{ window.location.reload();Cookies.set('note',value.content)}} className="btn" suppressHydrationWarning >Talk with note!</Link>
+                    
                   </div>
                   
                 </>

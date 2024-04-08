@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
+import { authOptions } from "../auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
 
 const groq = new OpenAI({
@@ -10,8 +12,10 @@ const groq = new OpenAI({
 export async function POST(req: Request) {
 	
   ///console.log(req)
+  const session = await getServerSession(authOptions);
+  if (session) {
 	const { messages } = await req.json();
-	//if (!prompt) return new Response("Prompt is required", { status: 400 });
+	
 
 	const response = await groq.chat.completions.create({
 		model: "mixtral-8x7b-32768",
@@ -28,5 +32,6 @@ export async function POST(req: Request) {
 
 	const stream = OpenAIStream(response);
 	
-  return new StreamingTextResponse(stream);
+  	return new StreamingTextResponse(stream);
+}
 }
