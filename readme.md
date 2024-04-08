@@ -1,5 +1,5 @@
 # Note writer
-Rich text Note writing app.
+Rich text Note writing app. <a href="https://note-write.vercel.app/">Live Demo</a>
 # Features
 * Create and manage notes.
 * Talk with your note using AI.
