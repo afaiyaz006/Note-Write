@@ -1,6 +1,6 @@
 # Note writer
 Rich text Note writing app.
-#Features
+# Features
 * Create and manage notes.
 * Talk with your note using AI.
 
