@@ -37,8 +37,7 @@ POSTGRES_URL="URL"
 3. Authentication : next-auth (Added only github as login provider so login with github only.)
 4. Frontend : NextJS (using latest App based routing) 
 5. CSS : Tailwind CSS+ Daisy UI
-# Is this app secure?
-Maybe
+
 # Screenshots
 
 ![](screenshots/homepage.png)
