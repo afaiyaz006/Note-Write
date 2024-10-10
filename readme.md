@@ -41,6 +41,8 @@ POSTGRES_URL="URL"
 # Screenshots
 
 ![](screenshots/homepage.png)
+![](screenshots/talk_with_note_button.PNG)
+![](screenshots/talk_with_note_button-2.PNG)
 ![](/screenshots/form.png)
 ![](screenshots/notes.png)
 
