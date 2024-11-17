@@ -13,7 +13,7 @@ export async function POST(req, { params }) {
   const note_id = params.note_id; // note_id is now a UUID
   const session = await getServerSession(authOptions);
   if (session) {
-    // Removed parseInt since note_id is a UUID
+
     if (note_id) { // Check if note_id is valid (not null or undefined)
       const formData = await req.formData();
       const title = formData.get("title");

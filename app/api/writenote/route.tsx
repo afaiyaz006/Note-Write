@@ -30,7 +30,8 @@ export async function POST(req, res) {
             }
 
             // Generate a new UUID for the note_id
-            const noteId = await db.raw(sql`SELECT uuid_generate_v4() AS id`).then(res => res[0].id);
+            const noteId = await db.select(sql`SELECT uuid_generate_v4() AS id`).execute().then(res => res[0].id);
+
 
             // Insert new note with the generated UUID
             const respond = await db.insert(notesTable).values({

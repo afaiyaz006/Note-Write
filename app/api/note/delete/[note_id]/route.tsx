@@ -8,9 +8,9 @@ export async function GET(req, { params }) {
 
   const note_id = params.note_id;
   const session = await getServerSession(authOptions);
-  // console.log(note_id);
+
   if (session) {
-    // Removed parseInt check for UUID
+   
     if (note_id) { // Check if note_id is provided
       const notes = await db
         .delete(notesTable)
