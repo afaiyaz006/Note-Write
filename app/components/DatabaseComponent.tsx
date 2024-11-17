@@ -14,7 +14,7 @@ const db = drizzle(sql);
 //pgTable that maps to the notes table  in  DB
 const notesTable = pgTable(
   "notes", {
-    note_id: text('note_id'),
+    note_id: text('note_id').default(sql`uuid_generate_v4()`),
     title: text('title'),
     content: text('content'),
     email: text('email')
