@@ -14,23 +14,18 @@ export async function GET(req, { params }) {
   const note_id = params.note_id;
   const session = await getServerSession(authOptions);
   if (session) {
-    if (parseInt(note_id) >= 0) {
-      const notes =await db
-        .select()
-        .from(notesTable)
-        .where(like(notesTable.note_id, note_id))
-        
-      //console.log(notes)
-      // Return the items as a JSON response with status 200
-      return new Response(JSON.stringify(notes), {
-        headers: { "Content-Type": "application/json" },
-        status: 200,
-      });
-    }
-  } else {
-    return new Response(JSON.stringify([{"ERROR":"ACCESS DENIED"}]), {
+    // Removed parseInt check for UUID
+    const notes = await db
+      .select()
+      .from(notesTable)
+      .where(like(notesTable.note_id, note_id))
+      
+    //console.log(notes)
+    // Return the items as a JSON response with status 200
+    return new Response(JSON.stringify(notes), {
       headers: { "Content-Type": "application/json" },
-      status: 401,
+      status: 200,
     });
   }
+  // ... existing code ...
 }

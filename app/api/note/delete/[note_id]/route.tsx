@@ -8,28 +8,28 @@ export async function GET(req, { params }) {
 
   const note_id = params.note_id;
   const session = await getServerSession(authOptions);
- // console.log(note_id);
+  // console.log(note_id);
   if (session) {
-    if (parseInt(note_id) >= 0) {
+    // Removed parseInt check for UUID
+    if (note_id) { // Check if note_id is provided
       const notes = await db
         .delete(notesTable)
         .where(eq(notesTable.note_id, note_id)).returning();
       
-
       //console.log("DELETED"+notes)
       return new Response(JSON.stringify([{"DELETED":"OK"}]), {
         headers: { "Content-Type": "application/json" },
         status: 200,
       });
     }
-    else{
+    else {
       return new Response(JSON.stringify([{"BAD REQUEST":"BAD"}]), {
         headers: { "Content-Type": "application/json" },
         status: 400,
       });
     }
   }
-  else{
+  else {
     return new Response(JSON.stringify([{"ERROR":"ACCESS DENIED"}]), {
       headers: { "Content-Type": "application/json" },
       status: 401,
