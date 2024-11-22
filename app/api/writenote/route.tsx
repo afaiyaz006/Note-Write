@@ -14,33 +14,13 @@ export async function POST(req, res) {
         const content = formData.get('content');
 
         try {
-            // Check for existing note with the same title and user email
-            const existingNote = await db
-                .select()
-                .from(notesTable)
-                .where(sql`email = ${session["user"]["email"]} AND title = ${title}`)
-                .limit(1)
-                .execute();
-
-            if (existingNote.length > 0) {
-                return new Response(JSON.stringify([{ "FAILED": "Note with the same title already exists." }]), {
-                    headers: { "Content-Type": "application/json" },
-                    status: 409, // Conflict
-                });
-            }
-
-            // Generate a new UUID for the note_id
-            const noteId = await db.select(sql`SELECT uuid_generate_v4() AS id`).execute().then(res => res[0].id);
-
-
             // Insert new note with the generated UUID
             const respond = await db.insert(notesTable).values({
-                note_id: noteId, // Use the generated UUID
                 title: title,
                 content: content,
                 email: session["user"]["email"],
             }).returning();
-
+            console.log(respond)
             return new Response(JSON.stringify([{ "SUCCESS": "Note created successfully", "note_id": respond[0].note_id }]), {
                 headers: { "Content-Type": "application/json" },
                 status: 201, // Created
