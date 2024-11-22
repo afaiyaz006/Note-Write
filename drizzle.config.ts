@@ -9,6 +9,5 @@ export default defineConfig({
   dialect: 'postgresql',
   driver: "pg",
   dbCredentials: {
-    connectionString:"postgres://default:zqa6dPKL2ltm@ep-lucky-morning-a1uxf0mj-pooler.ap-southeast-1.aws.neon.tech/verceldb?pgbouncer=true&connect_timeout=15&sslmode=require"
-  },
+    connectionString:process.env.POSTGRES_PRISMA_URL
 });
