@@ -16,7 +16,6 @@ export async function GET(req, { params }) {
         .delete(notesTable)
         .where(eq(notesTable.note_id, note_id)).returning();
       
-      //console.log("DELETED"+notes)
       return new Response(JSON.stringify([{"DELETED":"OK"}]), {
         headers: { "Content-Type": "application/json" },
         status: 200,
