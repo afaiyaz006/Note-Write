@@ -9,6 +9,5 @@ export default defineConfig({
   dialect: 'postgresql',
   driver: "pg",
   dbCredentials: {
-    connectionString:"***REMOVED***"
-  },
+    connectionString:process.env.POSTGRES_PRISMA_URL
 });
