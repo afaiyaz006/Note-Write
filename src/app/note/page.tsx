@@ -47,18 +47,18 @@ export default function Page() {
 
   // effects and submission function
   useEffect(() => {
-    console.log(noteId);
     async function getNote(noteId: string) {
-      const response = await axios.get(`/api/note?noteId=${noteId}`);
-      const note = response.data;
-      if (response.status === 404 || response.status === 500) {
-        router.push("/notes");
+      try {
+        const response = await axios.get(`/api/note?noteId=${noteId}`);
+        const note = response.data;
+        setDocumentTitle(note.title);
+        setInitialContent(note.content);
+      } catch {
+        router.push("/");
       }
-      setDocumentTitle(note.title);
-      setInitialContent(note.content);
     }
     getNote(noteId as string);
-  }, [noteId]);
+  }, []);
   const handleSubmission = async () => {
     try {
       setButtonLoading(true);

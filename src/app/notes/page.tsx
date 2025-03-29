@@ -41,7 +41,13 @@ export default function Page() {
       // Optional: Add user feedback here (e.g., toast notification)
     }
   };
-
+  // const handleSearch = async (text: string) => {
+  //   try {
+  //     mutate(`api/note/search?query=${text}`);
+  //   } catch (error) {
+  //     console.log("Failed request", error);
+  //   }
+  // };
   if (isPending || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -63,7 +69,12 @@ export default function Page() {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4">
         <Input className="w-full sm:w-64" placeholder="Search notes..." />
-        <Button className="w-full sm:w-auto">Search</Button>
+        <Button
+          className="w-full sm:w-auto"
+          // onClick={handleSearch(Input.value)}
+        >
+          Search
+        </Button>
       </div>
 
       <div className="flex flex-col items-center space-y-4 mt-5">

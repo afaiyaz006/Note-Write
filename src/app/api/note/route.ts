@@ -36,7 +36,10 @@ export async function GET(request: Request) {
     if (!response) {
       return NextResponse.json({ error: "Invalid Request" }, { status: 404 });
     }
-    return NextResponse.json(response[0] || {});
+    if (response.length === 0) {
+      return NextResponse.json({ error: "Invalid Request" }, { status: 404 });
+    }
+    return NextResponse.json(response[0]);
   } else {
     return NextResponse.json({ error: "Invalid Request" }, { status: 500 });
   }

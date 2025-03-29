@@ -3,7 +3,7 @@ import { auth } from "../../../../../auth";
 import { NextResponse } from "next/server";
 import { db } from "../../../../db/drizzle";
 import { note } from "@/db/schema/note-schema";
-import { count, eq } from "drizzle-orm";
+import { count, eq, desc } from "drizzle-orm";
 
 export async function GET(request: Request) {
   const session = await auth.api.getSession({
@@ -33,6 +33,7 @@ export async function GET(request: Request) {
       })
       .from(note)
       .where(eq(note.userId, userId))
+      .orderBy(desc(note.createdAt))
       .limit(limit)
       .offset(offsetNumber);
 

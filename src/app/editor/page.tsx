@@ -37,6 +37,7 @@ export default function Editor() {
         title: documentTitle,
         content: editor.document,
       });
+      router.push("/notes");
     } catch (error) {
       console.log(error);
     } finally {
