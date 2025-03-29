@@ -6,7 +6,7 @@ import SpinnerCircle from "@/components/ui/spinner/spinner";
 import { authClient } from "@/lib/auth-client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr"; // Import mutate
 import { useState } from "react";
 
 interface Note {
@@ -29,6 +29,19 @@ export default function Page() {
   const notes = data?.notes || [];
   const totalNotes = data?.count || 0;
 
+  const totalPages = Math.ceil(totalNotes / limit);
+
+  const handleDeletion = async (noteId: string) => {
+    try {
+      await axios.delete(`/api/note?noteId=${noteId}`);
+      // Trigger a re-fetch of the notes data after successful deletion
+      mutate(`/api/note/all?page=${page}&limit=${limit}`);
+    } catch (error) {
+      console.error("Failed to delete note:", error);
+      // Optional: Add user feedback here (e.g., toast notification)
+    }
+  };
+
   if (isPending || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -46,8 +59,6 @@ export default function Page() {
     return <p className="text-red-500 text-center">Failed to load notes.</p>;
   }
 
-  const totalPages = Math.ceil(totalNotes / limit);
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4">
@@ -64,8 +75,19 @@ export default function Page() {
                   {note.title}
                 </CardTitle>
                 <div className="mt-2 sm:mt-0 sm:ml-auto flex gap-2">
-                  <Button>View</Button>
-                  <Button>Delete</Button>
+                  <Button
+                    onClick={() => {
+                      router.push(`/note?noteId=${note.id}`);
+                    }}
+                  >
+                    View
+                  </Button>
+                  <Button
+                    onClick={() => handleDeletion(note.id)}
+                    variant="destructive" // Optional: Use a destructive variant for delete
+                  >
+                    Delete
+                  </Button>
                 </div>
               </CardHeader>
             </Card>

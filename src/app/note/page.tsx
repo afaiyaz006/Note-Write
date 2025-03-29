@@ -1,18 +1,24 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView, Theme } from "@blocknote/mantine";
-import { useCreateBlockNote } from "@blocknote/react";
+
 import "@blocknote/mantine/style.css";
-import SpinnerCircle from "../../components/ui/spinner/spinner";
+import SpinnerCircle from "@/components/ui/spinner/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
-
-export default function Editor() {
+import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
+// interface Note {
+//   id: string;
+//   title: string;
+//   content: PartialBlock[] | undefined | "loading";
+// }
+export default function Page() {
+  //theme config
   const lightTheme: Theme = {
     colors: {
       editor: {
@@ -21,21 +27,44 @@ export default function Editor() {
       },
     },
   };
-  const [documentTitle, setDocumentTitle] = useState("Untitled Document");
-
-  const [buttonLoading, setButtonLoading] = useState(false);
-
-  const editor = useCreateBlockNote();
-
-  const { data: session, isPending } = authClient.useSession();
+  //hooks
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const noteId = searchParams.get("noteId");
+  const [initialContent, setInitialContent] = useState<
+    PartialBlock[] | undefined | "loading"
+  >("loading");
+  const [documentTitle, setDocumentTitle] = useState("Untitled Document");
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const editor = useMemo(() => {
+    if (initialContent === "loading") {
+      return undefined;
+    }
+    return BlockNoteEditor.create({ initialContent });
+  }, [initialContent]);
+  //auth session
+  const { data: session, isPending } = authClient.useSession();
 
+  // effects and submission function
+  useEffect(() => {
+    console.log(noteId);
+    async function getNote(noteId: string) {
+      const response = await axios.get(`/api/note?noteId=${noteId}`);
+      const note = response.data;
+      if (response.status === 404 || response.status === 500) {
+        router.push("/notes");
+      }
+      setDocumentTitle(note.title);
+      setInitialContent(note.content);
+    }
+    getNote(noteId as string);
+  }, [noteId]);
   const handleSubmission = async () => {
     try {
       setButtonLoading(true);
-      await axios.post("/api/note", {
+      await axios.put(`/api/note?noteId=${noteId}`, {
         title: documentTitle,
-        content: editor.document,
+        content: editor?.document,
       });
     } catch (error) {
       console.log(error);
@@ -44,7 +73,7 @@ export default function Editor() {
     }
   };
 
-  if (isPending) {
+  if (isPending || editor === undefined) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <SpinnerCircle />
@@ -68,13 +97,12 @@ export default function Editor() {
               onClick={handleSubmission}
               disabled={buttonLoading}
             >
-              {buttonLoading ? <Loader2 className="animate-spin" /> : "Publish"}
+              {buttonLoading ? <Loader2 className="animate-spin" /> : "Update"}
             </Button>
             <Button className="min-w-[100px]">Share</Button>
           </div>
         </div>
         <BlockNoteView
-          formattingToolbar={true}
           editor={editor}
           theme={lightTheme}
           className="border rounded-md min-h-[500px] mt-4 p-2 w-full"

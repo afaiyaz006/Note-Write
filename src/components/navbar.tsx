@@ -38,6 +38,7 @@ import { redirect, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import SpinnerCircle from "../components/ui/spinner/spinner";
 import Link from "next/link";
+import { useState } from "react";
 interface MenuItem {
   title: string;
   url: string;
@@ -92,8 +93,8 @@ const Navbar1 = ({
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session, isPending, error } = authClient.useSession();
-
-  if (isPending) {
+  const [loggingOut, setLoggingOut] = useState(false);
+  if (isPending || loggingOut) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <SpinnerCircle />
@@ -176,7 +177,11 @@ const Navbar1 = ({
                           await signOut({
                             fetchOptions: {
                               onSuccess: () => {
+                                setLoggingOut(false);
                                 router.push("/login");
+                              },
+                              onRequest: () => {
+                                setLoggingOut(true);
                               },
                             },
                           });

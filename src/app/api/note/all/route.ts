@@ -19,8 +19,12 @@ export async function GET(request: Request) {
     const limit = Number(url.searchParams.get("limit")) || 10;
 
     const offsetNumber = (page - 1) * limit;
-    const totalCount = (await db.select({ count: count() }).from(note))[0]
-      .count;
+    const totalCount = (
+      await db
+        .select({ count: count() })
+        .from(note)
+        .where(eq(note.userId, userId))
+    )[0].count;
     // Fetch data with pagination
     const response = await db
       .select({
