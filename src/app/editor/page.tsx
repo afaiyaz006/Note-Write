@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-// import { Navbar1 } from "@/components/navbar";
 import { authClient } from "@/lib/auth-client";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView, Theme } from "@blocknote/mantine";
@@ -12,8 +11,8 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+
 export default function Page() {
-  // Custom light theme with a softer color palette
   const lightTheme: Theme = {
     colors: {
       editor: {
@@ -23,10 +22,9 @@ export default function Page() {
     },
   };
 
-  // State for document metadata
   const [documentTitle, setDocumentTitle] = useState("Untitled Document");
   const [buttonLoading, setButtonLoading] = useState(false);
-  // Creates a new editor instance
+
   const editor = useCreateBlockNote({
     initialContent: [
       {
@@ -40,20 +38,12 @@ export default function Page() {
     ],
   });
 
-  // // Authentication hook
-
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.push("/");
-  //   }
-  // }, [session, router]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data: session, isPending, error } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
+
   const handleSubmission = async () => {
     try {
       setButtonLoading(true);
-
       await axios.post("/api/note", {
         title: documentTitle,
         content: editor.document,
@@ -64,7 +54,7 @@ export default function Page() {
       setButtonLoading(false);
     }
   };
-  // Loading state
+
   if (isPending) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -72,37 +62,33 @@ export default function Page() {
       </div>
     );
   }
+
   if (session) {
     return (
-      <div className="min-h-screen p-4">
-        {/* <Navbar1></Navbar1> */}
-
-        {/* Main Content */}
-        <div className="flex flex-row ">
+      <div className="min-h-screen p-4 flex flex-col">
+        <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4">
           <Input
             value={documentTitle}
             onChange={(e) => setDocumentTitle(e.target.value)}
             placeholder="Enter note title"
-            className="mx-3 text-2xl font-bold"
+            className="w-full sm:w-auto text-2xl font-bold"
           />
-
-          <div className="flex justify-end mb-4">
+          <div className="flex gap-2">
             <Button
-              className="mx-2 min-w-[100px]"
+              className="min-w-[100px]"
               onClick={handleSubmission}
               disabled={buttonLoading}
             >
               {buttonLoading ? <Loader2 className="animate-spin" /> : "Publish"}
             </Button>
-            <Button className="mx-2 min-w-[100px]">Share</Button>
+            <Button className="min-w-[100px]">Share</Button>
           </div>
         </div>
         <BlockNoteView
           editor={editor}
           theme={lightTheme}
-          className="border rounded-md min-h-[500px]"
+          className="border rounded-md min-h-[500px] mt-4 p-2 w-full"
         />
-        {/* TODO: editor.document contains all the data just need to save this to database */}
       </div>
     );
   } else {

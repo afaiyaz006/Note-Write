@@ -24,6 +24,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
   Sheet,
@@ -36,7 +37,7 @@ import { signOut } from "@/lib/auth-client";
 import { redirect, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import SpinnerCircle from "../components/ui/spinner/spinner";
-
+import Link from "next/link";
 interface MenuItem {
   title: string;
   url: string;
@@ -303,26 +304,35 @@ const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-popover text-popover-foreground">
-          {item.items.map((subItem) => (
-            <NavigationMenuLink asChild key={subItem.title} className="w-500">
-              <SubMenuLink item={subItem} />
-            </NavigationMenuLink>
-          ))}
-        </NavigationMenuContent>
+        <Link href={item.url} legacyBehavior passHref>
+          <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
+          <NavigationMenuContent className="bg-popover text-popover-foreground">
+            {item.items.map((subItem) => (
+              <>
+                <Link href={subItem.url} legacyBehavior passHref>
+                  <NavigationMenuLink
+                    asChild
+                    key={subItem.title}
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    <SubMenuLink item={subItem} />
+                  </NavigationMenuLink>
+                </Link>
+              </>
+            ))}
+          </NavigationMenuContent>
+        </Link>
       </NavigationMenuItem>
     );
   }
 
   return (
     <NavigationMenuItem key={item.title}>
-      <NavigationMenuLink
-        href={item.url}
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-      >
-        {item.title}
-      </NavigationMenuLink>
+      <Link href={item.url} legacyBehavior passHref>
+        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+          {item.title}
+        </NavigationMenuLink>
+      </Link>
     </NavigationMenuItem>
   );
 };
@@ -344,9 +354,9 @@ const renderMobileMenuItem = (item: MenuItem) => {
   }
 
   return (
-    <a key={item.title} href={item.url} className="text-md font-semibold">
+    <Link key={item.title} href={item.url} className="text-md font-semibold">
       {item.title}
-    </a>
+    </Link>
   );
 };
 
