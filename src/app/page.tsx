@@ -9,7 +9,7 @@ export default function Home() {
         heading="Note Write"
         description="Write notes or whatever.."
         image={{
-          src: "https://fastly.picsum.photos/id/267/536/354.jpg?hmac=zVch2Xc4A7TDu19qPBFQxet0q1gXDc3aUr4zEUbs1Ec",
+          src: "https://i.ibb.co/rGD0NVZJ/Chat-GPT-Image-Mar-30-2025-05-15-01-PM.png",
           alt: "Random image",
         }}
       />

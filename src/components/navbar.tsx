@@ -69,10 +69,10 @@ interface Navbar1Props {
 
 const Navbar1 = ({
   logo = {
-    url: "https://www.shadcnblocks.com",
-    src: "https://shadcnblocks.com/images/block/logos/shadcnblockscom-icon.svg",
+    url: "favicon.svg",
+    src: "https://i.ibb.co/LDhXDYK6/freepik-20250330110141-Us77.jpg",
     alt: "logo",
-    title: "Shadcnblocks.com",
+    title: "Note-Write",
   },
   menu = [
     { title: "Home", url: "/" },
@@ -120,7 +120,7 @@ const Navbar1 = ({
             {/* Logo */}
             <a href={logo.url} className="flex items-center gap-2">
               <img
-                src={logo.src || "/placeholder.svg"}
+                src={logo.src || "/favicon.svg"}
                 className="max-h-8"
                 alt={logo.alt}
               />
