@@ -24,6 +24,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session, isPending, error, refetch } = authClient.useSession();
@@ -76,6 +77,17 @@ export default function SignIn() {
                     <Label htmlFor="password">Password</Label>
                     <Link
                       href="#"
+                      onClick={async () => {
+                        const { data, error } = await authClient.forgetPassword(
+                          { email: email, redirectTo: "/reset-password" }
+                        );
+                        if (error) {
+                          toast.error("Unknown email");
+                        }
+                        if (data) {
+                          toast.info("Email Reset link sent");
+                        }
+                      }}
                       className="ml-auto inline-block text-sm underline"
                     >
                       Forgot your password?
@@ -109,7 +121,12 @@ export default function SignIn() {
                   onClick={async () => {
                     try {
                       await signIn.email(
-                        { email, password, callbackURL: "/" },
+                        {
+                          email,
+                          password,
+                          rememberMe: rememberMe,
+                          callbackURL: "/",
+                        },
 
                         {
                           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -123,14 +140,14 @@ export default function SignIn() {
                           onError: (ctx) => {
                             // display the error message
                             setLoading(false);
-                            toast("Error", {
+                            toast.error("Error", {
                               description: ctx.error.message,
                             });
                           },
                         }
                       );
                     } catch {
-                      toast("Error", {
+                      toast.error("Error", {
                         description: "Internal server error",
                       });
                     }
@@ -155,7 +172,7 @@ export default function SignIn() {
                     onClick={async () => {
                       await signIn.social({
                         provider: "google",
-                        callbackURL: "/dashboard",
+                        callbackURL: "/",
                       });
                     }}
                   >

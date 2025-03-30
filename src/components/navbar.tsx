@@ -69,7 +69,7 @@ interface Navbar1Props {
 
 const Navbar1 = ({
   logo = {
-    url: "favicon.svg",
+    url: "/",
     src: "https://i.ibb.co/LDhXDYK6/freepik-20250330110141-Us77.jpg",
     alt: "logo",
     title: "Note-Write",
@@ -129,11 +129,15 @@ const Navbar1 = ({
               </span>
             </a>
             <div className="flex items-center">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
-                </NavigationMenuList>
-              </NavigationMenu>
+              {isLoggedIn && user ? (
+                <NavigationMenu>
+                  <NavigationMenuList>
+                    {menu.map((item) => renderMenuItem(item))}
+                  </NavigationMenuList>
+                </NavigationMenu>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
           <div className="flex gap-2">

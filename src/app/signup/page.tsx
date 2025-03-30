@@ -18,6 +18,16 @@ import { authClient, signUp } from "@/lib/auth-client";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
 import SpinnerCircle from "../../components/ui/spinner/spinner";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
+// import { Button } from "@/components/ui/button";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -27,6 +37,7 @@ export default function SignUp() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [regState, setRegState] = useState(false);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -62,6 +73,32 @@ export default function SignUp() {
     return (
       <>
         <Toaster></Toaster>
+        {regState && (
+          <AlertDialog open={regState} onOpenChange={setRegState}>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline">Email Has</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Email Sent Successfully</AlertDialogTitle>
+                <AlertDialogDescription>
+                  <b>
+                    Verification link has been sent to your email at {email}
+                  </b>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <Button
+                  onClick={() => {
+                    router.push("/login");
+                  }}
+                >
+                  Ok
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
         <div className="min-h-screen flex items-center justify-center p-3">
           <Card className="w-full max-w-md p-6 z-50 rounded-md rounded-t-none max-w-md">
             <CardHeader>
@@ -189,7 +226,7 @@ export default function SignUp() {
                           toast.error(ctx.error.message);
                         },
                         onSuccess: async () => {
-                          router.push("/");
+                          setRegState(true);
                         },
                       },
                     });
