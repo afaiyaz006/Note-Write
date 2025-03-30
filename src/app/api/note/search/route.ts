@@ -11,9 +11,14 @@ export async function GET(request: Request) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  //TODO: ADD VALIDATION FOR searchContent otherwise there are risk of sql injection
+  //TODO: ADD VALIDATION FOR searchContent otherwise there are risk of sql injections
   if (session && searchContent) {
-    const searchKeywords = searchContent.replace(/\s+/g, " & ");
+    // Extract page and limit from query parameters
+
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 10;
+    const offsetNumber = (page - 1) * limit;
+
     const response = await db
       .select({
         id: note.id,
@@ -21,13 +26,38 @@ export async function GET(request: Request) {
       })
       .from(note)
       .where(
-        sql`to_tsvector('english', ${note.title}) @@ to_tsquery('english', ${searchKeywords})`
+        sql`(
+          setweight(to_tsvector('english', ${note.title}), 'A') ||
+          setweight(to_tsvector('english', ${note.content}), 'B')
+        ) @@ websearch_to_tsquery('english', ${searchContent})`
+      )
+      .limit(limit)
+      .offset(offsetNumber);
+    const totalCount = await db
+      .select({
+        totalCount: sql`count(*) OVER ()`,
+      })
+      .from(note)
+      .where(
+        sql`(
+        setweight(to_tsvector('english', ${note.title}), 'A') ||
+        setweight(to_tsvector('english', ${note.content}), 'B')
+      ) @@ websearch_to_tsquery('english', ${searchContent})`
       );
 
     if (!response) {
       return NextResponse.json({ error: "Invalid Request" }, { status: 404 });
     }
-    return NextResponse.json(response || [{}]);
+    if (totalCount.length === 0) {
+      return NextResponse.json({
+        notes: [{}],
+        count: 0,
+      });
+    }
+    return NextResponse.json({
+      notes: response,
+      count: totalCount[0].totalCount || 0,
+    });
   } else {
     return NextResponse.json({ error: "Invalid Request" }, { status: 500 });
   }

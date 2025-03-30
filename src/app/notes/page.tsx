@@ -6,7 +6,7 @@ import SpinnerCircle from "@/components/ui/spinner/spinner";
 import { authClient } from "@/lib/auth-client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import useSWR, { mutate } from "swr"; // Import mutate
+import useSWR, { mutate } from "swr";
 import { useState } from "react";
 
 interface Note {
@@ -20,34 +20,39 @@ export default function Page() {
   const { data: session, isPending } = authClient.useSession();
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [searchTerm, setSearchTerm] = useState(""); // State for submitted search term
   const router = useRouter();
 
-  const { data, error, isLoading } = useSWR(
-    `/api/note/all?page=${page}&limit=${limit}`,
-    fetcher
-  );
+  // Dynamic API URL based on submitted search term
+  const apiUrl = searchTerm
+    ? `/api/note/search?query=${encodeURIComponent(
+        searchTerm
+      )}&page=${page}&limit=${limit}`
+    : `/api/note/all?page=${page}&limit=${limit}`;
+
+  const { data, error, isLoading } = useSWR(apiUrl, fetcher);
   const notes = data?.notes || [];
   const totalNotes = data?.count || 0;
-
   const totalPages = Math.ceil(totalNotes / limit);
 
   const handleDeletion = async (noteId: string) => {
     try {
       await axios.delete(`/api/note?noteId=${noteId}`);
-      // Trigger a re-fetch of the notes data after successful deletion
-      mutate(`/api/note/all?page=${page}&limit=${limit}`);
+      // Re-fetch data after deletion
+      mutate(apiUrl);
     } catch (error) {
       console.error("Failed to delete note:", error);
-      // Optional: Add user feedback here (e.g., toast notification)
     }
   };
-  // const handleSearch = async (text: string) => {
-  //   try {
-  //     mutate(`api/note/search?query=${text}`);
-  //   } catch (error) {
-  //     console.log("Failed request", error);
-  //   }
-  // };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent form submission refresh
+    setSearchTerm(searchQuery); // Update the submitted search term
+    setPage(1); // Reset to first page on new search
+    // No need to call mutate here; SWR will automatically re-fetch due to apiUrl change
+  };
+
   if (isPending || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -67,15 +72,21 @@ export default function Page() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4">
-        <Input className="w-full sm:w-64" placeholder="Search notes..." />
-        <Button
-          className="w-full sm:w-auto"
-          // onClick={handleSearch(Input.value)}
-        >
+      {/* Search Form */}
+      <form
+        onSubmit={handleSearch}
+        className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4"
+      >
+        <Input
+          className="w-full sm:w-64"
+          placeholder="Search notes by title and content..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Only updates local state
+        />
+        <Button type="submit" className="w-full sm:w-auto">
           Search
         </Button>
-      </div>
+      </form>
 
       <div className="flex flex-col items-center space-y-4 mt-5">
         {notes.length > 0 ? (
@@ -95,7 +106,7 @@ export default function Page() {
                   </Button>
                   <Button
                     onClick={() => handleDeletion(note.id)}
-                    variant="destructive" // Optional: Use a destructive variant for delete
+                    variant="destructive"
                   >
                     Delete
                   </Button>
@@ -129,7 +140,7 @@ export default function Page() {
           </div>
           <Button
             variant="outline"
-            disabled={page === totalPages}
+            disabled={page === totalPages || totalPages === 0}
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
           >
             Next
