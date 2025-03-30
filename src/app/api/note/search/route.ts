@@ -3,7 +3,7 @@ import { auth } from "../../../../../auth";
 import { NextResponse } from "next/server";
 import { db } from "../../../../db/drizzle";
 import { note } from "@/db/schema/note-schema";
-import { sql } from "drizzle-orm";
+import { sql, and, eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -26,10 +26,13 @@ export async function GET(request: Request) {
       })
       .from(note)
       .where(
-        sql`(
+        and(
+          sql`(
           setweight(to_tsvector('english', ${note.title}), 'A') ||
           setweight(to_tsvector('english', ${note.content}), 'B')
-        ) @@ websearch_to_tsquery('english', ${searchContent})`
+        ) @@ websearch_to_tsquery('english', ${searchContent})`,
+          eq(note.userId, session.user.id)
+        )
       )
       .limit(limit)
       .offset(offsetNumber);
@@ -39,10 +42,13 @@ export async function GET(request: Request) {
       })
       .from(note)
       .where(
-        sql`(
+        and(
+          sql`(
         setweight(to_tsvector('english', ${note.title}), 'A') ||
         setweight(to_tsvector('english', ${note.content}), 'B')
-      ) @@ websearch_to_tsquery('english', ${searchContent})`
+      ) @@ websearch_to_tsquery('english', ${searchContent})`,
+          eq(note.userId, session.user.id)
+        )
       );
 
     if (!response) {
@@ -50,7 +56,7 @@ export async function GET(request: Request) {
     }
     if (totalCount.length === 0) {
       return NextResponse.json({
-        notes: [{}],
+        notes: [],
         count: 0,
       });
     }
