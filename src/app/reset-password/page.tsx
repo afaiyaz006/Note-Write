@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,14 +23,13 @@ export default function Page() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const token = new URLSearchParams(window.location.search).get("token");
-
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
   if (!token) {
     router.push("/login");
   }
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    const tokenAgain = new URLSearchParams(window.location.search).get("token");
     if (!password) {
       toast.error("Please enter a new password", {
         description: "Password field cannot be empty",
@@ -39,7 +38,7 @@ export default function Page() {
     }
     const { data, error } = await authClient.resetPassword({
       newPassword: password,
-      token: tokenAgain || "",
+      token: token || "",
     });
     if (error) {
       toast.error("You should not be here");

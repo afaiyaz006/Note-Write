@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView, Theme } from "@blocknote/mantine";
@@ -22,13 +22,24 @@ export default function Editor() {
     },
   };
   const [documentTitle, setDocumentTitle] = useState("Untitled Document");
-
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const editor = useCreateBlockNote();
-
+  const editor = useCreateBlockNote({});
   const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true); // Set flag to true after mounting
+  }, []);
+
+  if (isPending || editor === undefined) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <SpinnerCircle />
+      </div>
+    );
+  }
 
   const handleSubmission = async () => {
     try {
@@ -44,14 +55,6 @@ export default function Editor() {
       setButtonLoading(false);
     }
   };
-
-  if (isPending) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <SpinnerCircle />
-      </div>
-    );
-  }
 
   if (session) {
     return (
@@ -74,12 +77,18 @@ export default function Editor() {
             <Button className="min-w-[100px]">Share</Button>
           </div>
         </div>
-        <BlockNoteView
-          formattingToolbar={true}
-          editor={editor}
-          theme={lightTheme}
-          className="border rounded-md min-h-[500px] mt-4 p-2 w-full"
-        />
+        {isMounted ? (
+          <BlockNoteView
+            formattingToolbar={true}
+            editor={editor}
+            theme={lightTheme}
+            className="border rounded-md min-h-[500px] mt-4 p-2 w-full"
+          />
+        ) : (
+          <div className="flex items-center justify-center min-h-[500px] mt-4">
+            <SpinnerCircle />
+          </div>
+        )}
       </div>
     );
   } else {

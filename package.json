@@ -34,6 +34,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@types/bcrypt": "^5.0.2",
     "@types/nodemailer": "^6.4.17",
+    "@types/nodemailer-smtp-transport": "^2.7.8",
     "@udecode/cmdk": "^0.2.0",
     "@udecode/cn": "^46.0.9",
     "@udecode/plate-ai": "^46.0.8",

@@ -5,8 +5,8 @@ interface EmailContent {
   text: string;
 }
 const transporter = nodemailer.createTransport({
+  port: Number(process.env.EMAIL_PORT),
   host: process.env.EMAIL_HOST as string,
-  port: process.env.EMAIL_PORT as string,
   secure: false, // true for port 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
