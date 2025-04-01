@@ -90,6 +90,7 @@
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.5",
     "drizzle-orm": "^0.41.0",
+    "esbuild": "^0.25.2",
     "html2canvas": "^1.4.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.484.0",
