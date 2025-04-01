@@ -1,97 +1,20 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { authClient } from "@/lib/auth-client";
-import "@blocknote/core/fonts/inter.css";
-import { BlockNoteView, Theme } from "@blocknote/mantine";
-import { useCreateBlockNote } from "@blocknote/react";
-import "@blocknote/mantine/style.css";
-import SpinnerCircle from "../../components/ui/spinner/spinner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { Loader2 } from "lucide-react";
+// pages/editor.tsx (or app/editor/page.tsx)
+import SpinnerCircle from "@/components/ui/spinner/spinner";
+import dynamic from "next/dynamic";
 
-export default function Editor() {
-  const lightTheme: Theme = {
-    colors: {
-      editor: {
-        text: "#1A1A2E",
-        background: "#F5F5FA",
-      },
-    },
-  };
-  const [documentTitle, setDocumentTitle] = useState("Untitled Document");
-  const [buttonLoading, setButtonLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-
-  const editor = useCreateBlockNote({});
-  const { data: session, isPending } = authClient.useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    setIsMounted(true); // Set flag to true after mounting
-  }, []);
-
-  if (isPending || editor === undefined) {
-    return (
+// Dynamically import the Editor component, disabling SSR
+const Editor = dynamic(() => import("../../components/editor"), {
+  ssr: false, // Prevents server-side rendering
+  loading: () => (
+    <>
       <div className="flex items-center justify-center min-h-screen">
-        <SpinnerCircle />
+        <SpinnerCircle></SpinnerCircle>
       </div>
-    );
-  }
+    </>
+  ),
+});
 
-  const handleSubmission = async () => {
-    try {
-      setButtonLoading(true);
-      await axios.post("/api/note", {
-        title: documentTitle,
-        content: editor.document,
-      });
-      router.push("/notes");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setButtonLoading(false);
-    }
-  };
-
-  if (session) {
-    return (
-      <div className="min-h-screen p-4 flex flex-col">
-        <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4">
-          <Input
-            value={documentTitle}
-            onChange={(e) => setDocumentTitle(e.target.value)}
-            placeholder="Enter note title"
-            className="w-full md:w-full sm:w-auto text-2xl font-bold"
-          />
-          <div className="flex gap-2">
-            <Button
-              className="min-w-[100px]"
-              onClick={handleSubmission}
-              disabled={buttonLoading}
-            >
-              {buttonLoading ? <Loader2 className="animate-spin" /> : "Publish"}
-            </Button>
-            <Button className="min-w-[100px]">Share</Button>
-          </div>
-        </div>
-        {isMounted ? (
-          <BlockNoteView
-            formattingToolbar={true}
-            editor={editor}
-            theme={lightTheme}
-            className="border rounded-md min-h-[500px] mt-4 p-2 w-full"
-          />
-        ) : (
-          <div className="flex items-center justify-center min-h-[500px] mt-4">
-            <SpinnerCircle />
-          </div>
-        )}
-      </div>
-    );
-  } else {
-    router.push("/");
-  }
+export default function EditorPage() {
+  return <Editor />;
 }
