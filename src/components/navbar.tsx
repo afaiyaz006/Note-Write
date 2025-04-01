@@ -170,7 +170,7 @@ const Navbar1 = ({
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
+                    <Link href="/settings">Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
@@ -266,10 +266,10 @@ const Navbar1 = ({
                           </div>
                         </div>
                         <Button asChild variant="outline">
-                          <a href="/profile">Profile</a>
+                          <Link href="/profile">Profile</Link>
                         </Button>
                         <Button asChild variant="outline">
-                          <a href="/settings">Settings</a>
+                          <Link href="/settings">Settings</Link>
                         </Button>
                         <Button
                           variant="destructive"

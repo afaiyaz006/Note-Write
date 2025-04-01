@@ -49,6 +49,7 @@ export default function SignUp() {
   }, [session, router]);
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
       setImage(file);
       const reader = new FileReader();

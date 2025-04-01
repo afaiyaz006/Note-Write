@@ -1,5 +1,4 @@
 "use client";
-// pages/editor.tsx (or app/editor/page.tsx)
 import SpinnerCircle from "@/components/ui/spinner/spinner";
 import dynamic from "next/dynamic";
 
