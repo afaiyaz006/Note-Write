@@ -26,7 +26,7 @@ export default function Page() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   if (!token) {
-    router.push("/login");
+    router.push("/auth/login");
   }
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +45,7 @@ export default function Page() {
     }
     if (data) {
       toast.success("Password reset successfull");
-      router.push("/login");
+      router.push("/auth/login");
     }
     setIsLoading(true);
 

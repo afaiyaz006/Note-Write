@@ -86,13 +86,14 @@ const Navbar1 = ({
     },
   ],
   auth = {
-    login: { title: "Login", url: "/login" },
-    signup: { title: "Sign up", url: "/signup" },
+    login: { title: "Login", url: "/auth/login" },
+    signup: { title: "Sign up", url: "/auth/signup" },
   },
 }: Navbar1Props) => {
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session, isPending, error } = authClient.useSession();
+
   const [loggingOut, setLoggingOut] = useState(false);
   if (isPending || loggingOut) {
     return (
@@ -182,7 +183,7 @@ const Navbar1 = ({
                             fetchOptions: {
                               onSuccess: () => {
                                 setLoggingOut(false);
-                                router.push("/login");
+                                router.push("/auth/login");
                               },
                               onRequest: () => {
                                 setLoggingOut(true);

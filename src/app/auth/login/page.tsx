@@ -18,7 +18,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
-import SpinnerCircle from "../../components/ui/spinner/spinner";
+import SpinnerCircle from "../../../components/ui/spinner/spinner";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

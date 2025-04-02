@@ -17,7 +17,7 @@ import { Loader2, X } from "lucide-react";
 import { authClient, signUp } from "@/lib/auth-client";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
-import SpinnerCircle from "../../components/ui/spinner/spinner";
+import SpinnerCircle from "../../../components/ui/spinner/spinner";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -26,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../../components/ui/alert-dialog";
+} from "../../../components/ui/alert-dialog";
 // import { Button } from "@/components/ui/button";
 
 export default function SignUp() {
@@ -91,7 +91,7 @@ export default function SignUp() {
               <AlertDialogFooter>
                 <Button
                   onClick={() => {
-                    router.push("/login");
+                    router.push("/auth/login");
                   }}
                 >
                   Ok

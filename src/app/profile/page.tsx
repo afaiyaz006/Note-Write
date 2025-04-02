@@ -5,10 +5,17 @@ import SpinnerCircle from "@/components/ui/spinner/spinner";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ProfilePage() {
   const { data: session, isPending } = authClient.useSession();
-
+  const router = useRouter();
+  useEffect(() => {
+    if (!session) {
+      router.push("/");
+    }
+  }, [session]);
   if (isPending) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -16,7 +23,6 @@ export default function ProfilePage() {
       </div>
     );
   }
-
   if (session) {
     return (
       <div className="flex items-center justify-center min-h-screen p-6">
