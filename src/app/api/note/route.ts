@@ -4,6 +4,40 @@ import { NextResponse } from "next/server";
 import { db } from "../../../db/drizzle";
 import { note } from "@/db/schema/note-schema";
 import { and, eq } from "drizzle-orm";
+import axios from "axios";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function saveToEmbedding(
+  userName: string,
+  title: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  noteContent: any
+) {
+  let texts: string[] = [];
+  texts.push(`The user ${userName} has written the note titled ${title}`);
+  for (let i = 0; i < noteContent.length; i += 1) {
+    for (let j = 0; j < noteContent[i].content.length; j += 1) {
+      const paragraph = noteContent[i].content[j].text || "";
+      let lines = paragraph.toString().split(".") || [];
+      if (lines.length === 0) {
+        lines = paragraph.toString().split("\n");
+      } else if (lines.length === 0) {
+        lines = paragraph.toString().match(/.{1,10}/g) || [];
+      }
+      texts = texts.concat(lines);
+    }
+  }
+  console.log(texts);
+  const response = await axios.post(process.env.EMBEDDING_API_URL + "/embed", {
+    user: userName,
+    texts: texts,
+  });
+  if (response.status === 200) {
+    console.log("Embedding stored.");
+  } else {
+    console.log("request failed");
+  }
+  return response;
+}
 export async function POST(request: Request) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -17,6 +51,10 @@ export async function POST(request: Request) {
       .insert(note)
       .values({ userId: session.user.id, title: title, content: document })
       .returning();
+    const username = session.user.name;
+    setTimeout(async () => {
+      await saveToEmbedding(username, title, document);
+    }, 1);
     return NextResponse.json(response);
   } else {
     return NextResponse.json({ error: "You naughty" }, { status: 500 });
