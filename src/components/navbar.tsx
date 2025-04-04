@@ -84,6 +84,10 @@ const Navbar1 = ({
       title: "Write Note",
       url: "/editor",
     },
+    {
+      title: "Chat With notes",
+      url: "/chat-with-notes",
+    },
   ],
   auth = {
     login: { title: "Login", url: "/auth/login" },
