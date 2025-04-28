@@ -12,28 +12,25 @@ async function getNotes(username: string, queryContent: any) {
   let texts: string[] = [];
 
   for (let i = 0; i < queryContent.length; i += 1) {
-    let para = queryContent[i].content.split(".");
-    if (para.length === 0) {
-      para = queryContent[i].content.split("\n");
-    } else if (para.length === 0) {
-      para = queryContent[i].content.match(/.{1,10}/g) || [];
-    }
+    const para = queryContent[i].content;
+
     texts = texts.concat(para);
   }
-
-  const response = await axios.post(process.env.EMBEDDING_API_URL + "/query", {
-    user: username,
-    query_texts: texts,
-  });
-  const relatedInfos: string[] = [];
-  for (let i = 0; i < response.data[0].length; i += 1) {
-    relatedInfos.push(response.data[0][i].document);
-  }
+  console.log(queryContent);
+  const response = await axios.post(
+    process.env.EMBEDDING_API_URL + "/hf-query",
+    {
+      user: username,
+      query_texts: texts,
+    }
+  );
   // const documents = response.data.map((res: any) => res.document);
   if (response.status != 200) {
     return "Unable to retrieve any notes";
   }
-  return relatedInfos.join(".");
+  const relatedInfos = response.data || "";
+
+  return relatedInfos.join("\n");
 }
 export async function POST(req: Request) {
   const { messages } = await req.json();

@@ -17,20 +17,18 @@ async function saveToEmbedding(
   for (let i = 0; i < noteContent.length; i += 1) {
     for (let j = 0; j < noteContent[i].content.length; j += 1) {
       const paragraph = noteContent[i].content[j].text || "";
-      let lines = paragraph.toString().split(".") || [];
-      if (lines.length === 0) {
-        lines = paragraph.toString().split("\n");
-      } else if (lines.length === 0) {
-        lines = paragraph.toString().match(/.{1,10}/g) || [];
-      }
-      texts = texts.concat(lines);
+
+      texts = texts.concat(paragraph);
     }
   }
   console.log(texts);
-  const response = await axios.post(process.env.EMBEDDING_API_URL + "/embed", {
-    user: userName,
-    texts: texts,
-  });
+  const response = await axios.post(
+    process.env.EMBEDDING_API_URL + "/hf-embed",
+    {
+      user: userName,
+      texts: texts,
+    }
+  );
   if (response.status === 200) {
     console.log("Embedding stored.");
   } else {
