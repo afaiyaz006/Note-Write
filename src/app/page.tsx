@@ -9,7 +9,7 @@ export default function Home() {
         heading="Note Write"
         description="Write notes or whatever.."
         image={{
-          src: "https://i.ibb.co/wFwHFgvS/4abe1007-f780-4f6e-93b1-2c33f4ad5c40.png",
+          src: "https://i.ibb.co/SXz1NHGJ/note-pad-hero.jpg",
           alt: "Random image",
         }}
       />
