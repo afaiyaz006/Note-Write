@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+// import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import SpinnerCircle from "@/components/ui/spinner/spinner";
 import { authClient } from "@/lib/auth-client";
@@ -90,30 +90,40 @@ export default function Page() {
 
       <div className="flex flex-col items-center space-y-4 mt-5">
         {notes.length > 0 ? (
-          notes.map((note: Note) => (
-            <Card key={note.id} className="w-full max-w-lg mt-3">
-              <CardHeader className="flex flex-col sm:flex-row items-center">
-                <CardTitle className="text-center sm:text-left w-full">
-                  {note.title}
-                </CardTitle>
-                <div className="mt-2 sm:mt-0 sm:ml-auto flex gap-2">
-                  <Button
-                    onClick={() => {
-                      router.push(`/note/${note.id}`);
-                    }}
-                  >
-                    View
-                  </Button>
-                  <Button
-                    onClick={() => handleDeletion(note.id)}
-                    variant="destructive"
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </CardHeader>
-            </Card>
-          ))
+          <div className="overflow-x-auto w-full">
+            <table className="min-w-full border text-sm">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="px-4 py-2 border">Title</th>
+                  <th className="px-4 py-2 border">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {notes.map((note: Note) => (
+                  <tr key={note.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-2 border">{note.title}</td>
+                    <td className="px-4 py-2 border space-x-2">
+                      <div className="flex justify-center space-x-2">
+                        <Button
+                          size="sm"
+                          onClick={() => router.push(`/note/${note.id}`)}
+                        >
+                          View
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeletion(note.id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <p className="text-center">No notes found.</p>
         )}
