@@ -8,7 +8,8 @@ import "@blocknote/mantine/style.css";
 import SpinnerCircle from "@/components/ui/spinner/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
@@ -29,8 +30,9 @@ export default function Page() {
   };
   //hooks
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const noteId = searchParams.get("noteId");
+  const params = useParams();
+  const noteId = params.id;
+
   const [initialContent, setInitialContent] = useState<
     PartialBlock[] | undefined | "loading"
   >("loading");

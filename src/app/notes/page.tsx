@@ -99,7 +99,7 @@ export default function Page() {
                 <div className="mt-2 sm:mt-0 sm:ml-auto flex gap-2">
                   <Button
                     onClick={() => {
-                      router.push(`/note?noteId=${note.id}`);
+                      router.push(`/note/${note.id}`);
                     }}
                   >
                     View
